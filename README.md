@@ -4,6 +4,8 @@ Sito statico che raccoglie le linee guida per il design di interazioni vocali co
 Progetto di Ingegneria Informatica, Politecnico di Milano. Tutor: Ludovica Piro.
 
 Sito online: https://giovanni0402.github.io/conversational-web-archive/
+
+
 Editor: https://giovanni0402.github.io/conversational-web-archive/editor.html
 
 ## Aprirlo
