@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<!-- Pagina iniziale del sito (home). -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#2f6d59">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Conversational Web - Guidelines Archive</title>
+  <meta name="description" content="Interactive archive of guidelines for the design of voice interactions with the web.">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<!-- data-page dice ad app.js che questa è la home -->
+<body data-page="home">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="app-shell">
+    <!-- Barra laterale: è uguale in tutte le pagine -->
+    <aside class="rail">
+      <a class="rail__brand" href="index.html">
+        <span class="rail__logo">CW</span>
+        <span>Conversational Web<br>Browsing Wikia</span>
+      </a>
+      <nav class="rail__nav" aria-label="Main navigation">
+        <a href="index.html" aria-current="page"> <!-- aria-current = pagina in cui mi trovo -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/></svg>
+          Home
+        </a>
+        <a href="category.html">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2z"/><path d="M9 8h6M9 12h6"/></svg>
+          Guidelines
+        </a>
+        <a href="component.html">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+          Design patterns
+        </a>
+      </nav>
+    </aside>
+
+    <div class="content">
+      <main id="main">
+        <!-- Breve presentazione del progetto -->
+        <section class="hero">
+          <h1>Guidelines for the Conversational Web</h1>
+          <p>
+            Guidelines and materials for designing voice interactions with the web,
+            browsable by principle category or by design pattern.
+          </p>
+          <div class="hero__stats" id="hero-stats"></div>
+        </section>
+
+        <!-- Le sezioni qui sotto vengono riempite da app.js leggendo i contenuti -->
+        <section aria-labelledby="cats-h">
+          <div class="section-title-row"><h2 id="cats-h">Categories</h2></div>
+          <div class="cat-bands" id="cat-cards"></div>
+        </section>
+
+        <section aria-labelledby="comps-h">
+          <div class="section-title-row"><h2 id="comps-h">Design patterns</h2></div>
+          <div class="card-grid" id="comp-cards"></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- content.js va caricato PRIMA di app.js: contiene tutti i testi del sito -->
+  <script src="data/content.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

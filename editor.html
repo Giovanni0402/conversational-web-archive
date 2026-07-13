@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<!-- Editor dei contenuti. Modifiche in memoria; "Download content.js" esporta il file
+     da rimettere in data/. Funziona anche aperto da file://. -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2f6d59">
+<title>Content editor - Conversational Web</title>
+<style>
+  :root{ --green:#2f6d59; --green-d:#234f41; --bg:#f5f7f6; --surface:#fff; --border:#e0e5e2;
+    --text:#1b2430; --soft:#5c6573; --rail:#ecf2ed; }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--text);line-height:1.5}
+  header.bar{background:var(--green);color:#fff;padding:.9rem 1.4rem;display:flex;align-items:center;
+    gap:1rem;flex-wrap:wrap;position:sticky;top:0;z-index:5}
+  header.bar h1{font-size:1.05rem;margin:0;font-weight:700}
+  header.bar .help{font-size:.82rem;opacity:.9;flex:1;min-width:220px}
+  button{font:inherit;cursor:pointer;border:0;border-radius:8px;padding:.5rem .9rem;font-weight:600}
+  .btn-primary{background:#fff;color:var(--green-d)}
+  .btn-green{background:var(--green);color:#fff}
+  .btn-ghost{background:transparent;color:var(--green-d);border:1px solid var(--border)}
+  .btn-danger{background:#fbe9e6;color:#9b3b2c}
+  .btn-sm{padding:.3rem .6rem;font-size:.85rem}
+  .tabs{display:flex;gap:.3rem;padding:.8rem 1.4rem 0;background:var(--surface);border-bottom:1px solid var(--border)}
+  .tabs button{background:transparent;border-radius:8px 8px 0 0;color:var(--soft);padding:.6rem 1rem}
+  .tabs button.active{background:var(--bg);color:var(--green-d);border:1px solid var(--border);border-bottom:0}
+  .wrap{max-width:1100px;margin:0 auto;padding:1.4rem}
+  .panel{display:none}
+  .panel.active{display:block}
+  .cols{display:grid;grid-template-columns:320px 1fr;gap:1.4rem}
+  .list{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.6rem;max-height:75vh;overflow:auto}
+  .list .cat-group{font-size:.7rem;text-transform:uppercase;letter-spacing:.07em;color:var(--soft);
+    margin:.8rem .4rem .3rem}
+  .list .item{display:flex;align-items:center;gap:.5rem;width:100%;text-align:left;background:transparent;
+    border-radius:8px;padding:.45rem .5rem;color:var(--text);font-weight:500}
+  .list .item:hover{background:var(--bg)}
+  .list .item.sel{background:#e7f0ec;color:var(--green-d)}
+  .dot{width:9px;height:9px;border-radius:50%;flex:none}          /* verde=completa, giallo=in arrivo */
+  .dot.ok{background:#2f9e6a}.dot.pend{background:#d8a23f}
+  .id-badge{font-size:.7rem;font-weight:700;background:#e7f0ec;color:var(--green-d);border-radius:5px;padding:.05rem .35rem}
+  form.card,.editbox{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.2rem}
+  label{display:block;font-size:.82rem;font-weight:600;color:var(--soft);margin:.8rem 0 .25rem}
+  input[type=text],textarea,select{width:100%;font:inherit;padding:.55rem .65rem;border:1px solid var(--border);
+    border-radius:8px;background:#fff;color:var(--text)}
+  textarea{resize:vertical;min-height:64px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+  .hint{font-size:.78rem;color:var(--soft);margin:.2rem 0 0}
+  .ex-row{border:1px solid var(--border);border-radius:9px;padding:.7rem;margin:.5rem 0;background:#fafbfb}
+  .ex-row .row2{margin-bottom:.4rem}
+  .form-actions{margin-top:1.1rem;display:flex;gap:.6rem;flex-wrap:wrap}
+  .toast{position:fixed;bottom:1.2rem;left:50%;transform:translateX(-50%);background:var(--green-d);color:#fff;
+    padding:.7rem 1.1rem;border-radius:10px;opacity:0;transition:opacity .2s;pointer-events:none;font-size:.9rem}
+  .toast.show{opacity:1}
+  .ed-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:.8rem}
+  .check-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.3rem;margin-top:.3rem}
+  .check-grid label{display:flex;gap:.4rem;align-items:flex-start;font-weight:500;color:var(--text);margin:.1rem 0;font-size:.85rem}
+  .check-grid input{width:auto;margin-top:.2rem}
+  @media(max-width:780px){.cols{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="bar">
+  <h1>Content editor</h1>
+  <span class="help">Changes are kept in memory. When you are done, press <b>Download content.js</b> and replace the file in <code>data/</code> in the site folder.</span>
+  <button class="btn-primary" onclick="exportContent()">Download content.js</button>
+</header>
+
+<div class="tabs">
+  <button id="tab-g" class="active" onclick="showTab('g')">Guidelines</button>
+  <button id="tab-c" onclick="showTab('c')">Categories</button>
+  <button id="tab-k" onclick="showTab('k')">Design patterns</button>
+</div>
+
+<div class="wrap">
+  <!-- Guidelines: lista a sinistra, form a destra -->
+  <section id="panel-g" class="panel active">
+    <div class="cols">
+      <div>
+        <button class="btn-green" style="width:100%;margin-bottom:.6rem" onclick="newGuideline()">+ New guideline</button>
+        <div class="list" id="g-list"></div>
+      </div>
+      <form class="card" id="g-form" onsubmit="saveGuideline(event)">
+        <div class="row2">
+          <div><label for="f-id">ID</label><input type="text" id="f-id" required><p class="hint">E.g. B22, S12. Unique.</p></div>
+          <div><label for="f-status">Status</label>
+            <select id="f-status"><option value="complete">Complete (show content)</option><option value="pending">Coming soon (title only)</option></select>
+          </div>
+        </div>
+        <div class="row2">
+          <div><label for="f-cat">Category</label><select id="f-cat"></select></div>
+          <div><label for="f-type">Type</label><select id="f-type"><option value="browsing">Browsing</option><option value="scaffolding">Scaffolding</option></select></div>
+        </div>
+        <label for="f-title">Title</label>
+        <input type="text" id="f-title" required>
+        <label for="f-desc">Description</label>
+        <textarea id="f-desc"></textarea>
+        <label for="f-wtd">What to do (one item per line)</label>
+        <textarea id="f-wtd"></textarea>
+        <label>Examples</label>
+        <div id="ex-rows"></div>
+        <button type="button" class="btn-ghost btn-sm" onclick="addExample()">+ Add example</button>
+        <label for="f-rel">Related guidelines</label>
+        <select id="f-rel" multiple size="6"></select>
+        <p class="hint">Hold Ctrl/Cmd to select more than one.</p>
+        <div class="form-actions">
+          <button type="submit" class="btn-green">Save guideline</button>
+          <button type="button" class="btn-danger" id="g-del" onclick="deleteGuideline()">Delete</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Categories -->
+  <section id="panel-c" class="panel">
+    <p class="hint">Add, edit or delete categories. Changes are kept in memory, then download content.js.</p>
+    <button class="btn-green" style="margin-bottom:.8rem" onclick="addCategory()">+ New category</button>
+    <div id="c-list"></div>
+  </section>
+
+  <!-- Design patterns -->
+  <section id="panel-k" class="panel">
+    <p class="hint">Add, edit or delete design patterns; for each one choose which guidelines belong to it. The initial mapping follows the tutor's file "Mapping linee guida design pattern.xlsx" (see docs/come-aggiornare-il-mapping.md).</p>
+    <button class="btn-green" style="margin-bottom:.8rem" onclick="addComponent()">+ New design pattern</button>
+    <div id="k-list"></div>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="data/content.js"></script>
+<script>
+// copia di lavoro: modifico questa, l'originale cambia solo all'export.
+var DATA = JSON.parse(JSON.stringify(window.ARCHIVE_DATA || {categories:[],components:[],guidelines:[]}));
+var selectedId = null;
+
+function toast(msg){ var t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show");
+  setTimeout(function(){ t.classList.remove("show"); }, 1800); }
+
+function showTab(k){
+  ["g","c","k"].forEach(function(x){
+    document.getElementById("tab-"+x).classList.toggle("active", x===k);
+    document.getElementById("panel-"+x).classList.toggle("active", x===k);
+  });
+  if(k==="c") renderCategories();
+  if(k==="k") renderComponents();
+}
+
+function escapeHtml(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+// lista guidelines a sinistra, raggruppata per categoria (pallino = stato).
+function renderGuidelineList(){
+  var box=document.getElementById("g-list"); box.innerHTML="";
+  DATA.categories.forEach(function(cat){
+    var items=DATA.guidelines.filter(function(g){return g.categoryId===cat.id;});
+    if(!items.length) return;
+    var h=document.createElement("div"); h.className="cat-group"; h.textContent=cat.name; box.appendChild(h);
+    items.forEach(function(g){
+      var b=document.createElement("button"); b.type="button";
+      b.className="item"+(g.id===selectedId?" sel":"");
+      b.onclick=function(){ editGuideline(g.id); };
+      b.innerHTML='<span class="dot '+(g.status==="complete"?"ok":"pend")+'"></span>'+
+        '<span class="id-badge">'+g.id+'</span><span>'+escapeHtml(g.title)+'</span>';
+      box.appendChild(b);
+    });
+  });
+}
+
+function fillCategorySelect(){
+  var sel=document.getElementById("f-cat"); sel.innerHTML="";
+  DATA.categories.forEach(function(c){ var o=document.createElement("option"); o.value=c.id; o.textContent=c.name; sel.appendChild(o); });
+}
+// select multiplo con le altre guidelines (per i collegamenti).
+function fillRelatedSelect(currentId, related){
+  var sel=document.getElementById("f-rel"); sel.innerHTML="";
+  DATA.guidelines.forEach(function(g){
+    if(g.id===currentId) return;
+    var o=document.createElement("option"); o.value=g.id; o.textContent=g.id+" - "+g.title;
+    if(related && related.indexOf(g.id)>=0) o.selected=true;
+    sel.appendChild(o);
+  });
+}
+
+// una riga esempio (vuota, o riempita se ne passo uno).
+function addExample(ex){
+  ex = ex || {type:"code",language:"html",title:"",content:""};
+  var wrap=document.getElementById("ex-rows");
+  var div=document.createElement("div"); div.className="ex-row";
+  div.innerHTML=
+    '<div class="row2">'+
+      '<div><label>Type</label><select class="ex-type">'+
+        '<option value="code"'+(ex.type==="code"?" selected":"")+'>Code</option>'+
+        '<option value="interaction"'+(ex.type==="interaction"?" selected":"")+'>Interaction</option>'+
+      '</select></div>'+
+      '<div><label>Example title</label><input type="text" class="ex-title"></div>'+
+    '</div>'+
+    '<label>Content</label><textarea class="ex-content"></textarea>'+
+    '<button type="button" class="btn-danger btn-sm" style="margin-top:.4rem">Remove example</button>';
+  div.querySelector(".ex-title").value=ex.title||"";
+  div.querySelector(".ex-content").value=ex.content||"";
+  div.querySelector("button").onclick=function(){ div.remove(); };
+  div.dataset.language=ex.language||"html";
+  wrap.appendChild(div);
+}
+function readExamples(){
+  var out=[];
+  document.querySelectorAll("#ex-rows .ex-row").forEach(function(r){
+    var content=r.querySelector(".ex-content").value;
+    if(!content.trim()) return;
+    out.push({ type:r.querySelector(".ex-type").value, language:r.dataset.language||"html",
+      title:r.querySelector(".ex-title").value.trim(), content:content });
+  });
+  return out;
+}
+
+// primo id libero per una nuova guideline (es. B22).
+function nextId(prefix){
+  var n=1; while(DATA.guidelines.some(function(g){return g.id===prefix+n;})) n++; return prefix+n;
+}
+function newGuideline(){
+  selectedId=null;
+  document.getElementById("f-id").value=nextId("B");
+  document.getElementById("f-status").value="complete";
+  fillCategorySelect();
+  document.getElementById("f-cat").value=DATA.categories[0].id;
+  document.getElementById("f-type").value="browsing";
+  document.getElementById("f-title").value="";
+  document.getElementById("f-desc").value="";
+  document.getElementById("f-wtd").value="";
+  document.getElementById("ex-rows").innerHTML="";
+  fillRelatedSelect(null, []);
+  document.getElementById("g-del").style.display="none";
+  renderGuidelineList();
+}
+function editGuideline(id){
+  var g=DATA.guidelines.find(function(x){return x.id===id;}); if(!g) return;
+  selectedId=id;
+  document.getElementById("f-id").value=g.id;
+  document.getElementById("f-status").value=g.status||"pending";
+  fillCategorySelect();
+  document.getElementById("f-cat").value=g.categoryId;
+  document.getElementById("f-type").value=g.type||"browsing";
+  document.getElementById("f-title").value=g.title||"";
+  document.getElementById("f-desc").value=g.description||"";
+  document.getElementById("f-wtd").value=(g.whatToDo||[]).join("\n");
+  document.getElementById("ex-rows").innerHTML="";
+  (g.examples||[]).forEach(function(ex){ addExample(ex); });
+  fillRelatedSelect(g.id, g.related||[]);
+  document.getElementById("g-del").style.display="";
+  renderGuidelineList();
+}
+function saveGuideline(e){
+  e.preventDefault();
+  var id=document.getElementById("f-id").value.trim();
+  if(!id){ toast("An ID is required"); return; }
+  if(DATA.guidelines.some(function(g){return g.id===id && g.id!==selectedId;})){ toast("ID already exists: "+id); return; }
+  var rel=Array.prototype.slice.call(document.getElementById("f-rel").selectedOptions).map(function(o){return o.value;});
+  var wtd=document.getElementById("f-wtd").value.split("\n").map(function(s){return s.trim();}).filter(Boolean);
+  var obj={
+    id:id,
+    categoryId:document.getElementById("f-cat").value,
+    type:document.getElementById("f-type").value,
+    title:document.getElementById("f-title").value.trim(),
+    description:document.getElementById("f-desc").value.trim(),
+    whatToDo:wtd,
+    examples:readExamples(),
+    related:rel,
+    status:document.getElementById("f-status").value
+  };
+  var idx=DATA.guidelines.findIndex(function(g){return g.id===selectedId;});
+  if(idx>=0) DATA.guidelines[idx]=obj; else DATA.guidelines.push(obj);
+  selectedId=id;
+  renderGuidelineList(); editGuideline(id);
+  toast("Saved "+id+" (remember to download content.js)");
+}
+function deleteGuideline(){
+  if(!selectedId) return;
+  if(!confirm("Delete guideline "+selectedId+"?")) return;
+  DATA.guidelines=DATA.guidelines.filter(function(g){return g.id!==selectedId;});
+  newGuideline(); toast("Deleted");
+}
+
+// Categories: nome e descrizione, con Delete per riga.
+function renderCategories(){
+  var box=document.getElementById("c-list"); box.innerHTML="";
+  DATA.categories.forEach(function(c,i){
+    var d=document.createElement("div"); d.className="ed-item";
+    d.innerHTML='<label>Name</label><input type="text">'+
+      '<label>Description</label><textarea></textarea>'+
+      '<div class="form-actions"><button type="button" class="btn-danger btn-sm">Delete category</button></div>';
+    d.querySelector("input").value=c.name;
+    d.querySelector("textarea").value=c.description||"";
+    d.querySelector("input").oninput=function(e){ DATA.categories[i].name=e.target.value; };
+    d.querySelector("textarea").oninput=function(e){ DATA.categories[i].description=e.target.value; };
+    d.querySelector("button").onclick=function(){ deleteCategory(i); };
+    box.appendChild(d);
+  });
+}
+
+// Design patterns: nome, descrizione e checkbox delle guidelines incluse (= mapping).
+function renderComponents(){
+  var box=document.getElementById("k-list"); box.innerHTML="";
+  DATA.components.forEach(function(c,i){
+    var d=document.createElement("div"); d.className="ed-item";
+    var checks=DATA.guidelines.map(function(g){
+      var on=(c.guidelineIds||[]).indexOf(g.id)>=0;
+      return '<label><input type="checkbox" data-gid="'+g.id+'"'+(on?" checked":"")+'> '+g.id+' - '+escapeHtml(g.title)+'</label>';
+    }).join("");
+    d.innerHTML='<label>Name</label><input type="text" class="k-name">'+
+      '<label>Description</label><textarea class="k-desc"></textarea>'+
+      '<label>Guidelines in this design pattern</label><div class="check-grid">'+checks+'</div>'+
+      '<div class="form-actions"><button type="button" class="btn-danger btn-sm k-del">Delete design pattern</button></div>';
+    d.querySelector(".k-name").value=c.name;
+    d.querySelector(".k-desc").value=c.description||"";
+    d.querySelector(".k-name").oninput=function(e){ DATA.components[i].name=e.target.value; };
+    d.querySelector(".k-desc").oninput=function(e){ DATA.components[i].description=e.target.value; };
+    d.querySelectorAll('input[type=checkbox]').forEach(function(cb){
+      cb.onchange=function(){
+        var ids=DATA.components[i].guidelineIds||[];
+        var gid=cb.dataset.gid;
+        if(cb.checked){ if(ids.indexOf(gid)<0) ids.push(gid); }
+        else { ids=ids.filter(function(x){return x!==gid;}); }
+        DATA.components[i].guidelineIds=ids;
+      };
+    });
+    d.querySelector(".k-del").onclick=function(){ deleteComponent(i); };
+    box.appendChild(d);
+  });
+}
+
+// primo id libero, formato cat-N / comp-N.
+function nextCatId(){ var n=1; while(DATA.categories.some(function(c){return c.id==="cat-"+n;})) n++; return "cat-"+n; }
+function nextCompId(){ var n=1; while(DATA.components.some(function(c){return c.id==="comp-"+n;})) n++; return "comp-"+n; }
+
+function addCategory(){
+  DATA.categories.push({ id:nextCatId(), name:"New category", description:"" });
+  renderCategories(); fillCategorySelect();
+  toast("Category added (remember to download content.js)");
+}
+function deleteCategory(i){
+  var c=DATA.categories[i];
+  var used=DATA.guidelines.filter(function(g){return g.categoryId===c.id;}).length;
+  var msg='Delete category "'+(c.name||c.id)+'"?';
+  if(used) msg+="\n\nWarning: "+used+" guideline(s) use this category and will be left without a valid category.";
+  if(!confirm(msg)) return;
+  DATA.categories.splice(i,1);
+  renderCategories(); fillCategorySelect();
+  toast("Category deleted");
+}
+
+function addComponent(){
+  DATA.components.push({ id:nextCompId(), name:"New design pattern", description:"", guidelineIds:[] });
+  renderComponents();
+  toast("Design pattern added (remember to download content.js)");
+}
+function deleteComponent(i){
+  var c=DATA.components[i];
+  if(!confirm('Delete design pattern "'+(c.name||c.id)+'"?')) return;
+  DATA.components.splice(i,1);
+  renderComponents();
+  toast("Design pattern deleted");
+}
+
+// esporta content.js con i dati correnti.
+function exportContent(){
+  var header="// content.js - contenuti dell'archivio. Generato dall'editor (editor.html).\n";
+  var text=header+"window.ARCHIVE_DATA = "+JSON.stringify(DATA,null,2)+";\n";
+  var blob=new Blob([text],{type:"text/javascript"});
+  var a=document.createElement("a");
+  a.href=URL.createObjectURL(blob); a.download="content.js";
+  document.body.appendChild(a); a.click(); a.remove();
+  toast("content.js downloaded - put it in the data/ folder");
+}
+
+newGuideline();
+renderGuidelineList();
+</script>
+</body>
+</html>

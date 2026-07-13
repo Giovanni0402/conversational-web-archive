@@ -1,0 +1,29 @@
+%% Architettura delle informazioni - Conversational Web Guidelines Archive
+%% Diagramma ad albero della struttura del sito (da validare con la tutor)
+graph TD
+    HOME["Homepage<br/>Intro 'Conversational Web' + 2 schede"]
+
+    HOME --> CATS["Categories<br/>(scheda / shortcut)"]
+    HOME --> COMPS["Web components<br/>(scheda / shortcut)"]
+
+    %% --- Ramo CATEGORIE ---
+    CATS --> CATLIST["Elenco delle 9 categorie"]
+    CATLIST --> CATDET["Pagina dettaglio Categoria"]
+    CATDET --> NAV1["(1) Menu di navigazione<br/>Home / cambia sezione"]
+    CATDET --> HEAD1["(2) Nome categoria + descrizione"]
+    CATDET --> LIST1["(3) Lista scorribile linee guida<br/>browsing + scaffolding"]
+    LIST1 --> DET1["(4) Descrizione estesa linea guida<br/>come soddisfarla + esempi<br/>(codice / interazione) + correlate"]
+
+    %% --- Ramo COMPONENTI ---
+    COMPS --> COMPLIST["Elenco dei 5 componenti<br/>Menu, Bottoni, Link, Input, Multimedia"]
+    COMPLIST --> COMPDET["Pagina dettaglio Componente<br/>(struttura analoga alla categoria)"]
+    COMPDET --> NAV2["(1) Menu di navigazione"]
+    COMPDET --> HEAD2["(2) Nome componente + descrizione"]
+    COMPDET --> LIST2["(3) Linee guida relative al componente"]
+    LIST2 --> DET2["(4) Descrizione estesa + esempi"]
+
+    %% --- Sorgente dati ---
+    DATA[("data/content.js<br/>categories - components - guidelines")]
+    DATA -.alimenta.-> CATDET
+    DATA -.alimenta.-> COMPDET
+    DATA -.alimenta.-> HOME

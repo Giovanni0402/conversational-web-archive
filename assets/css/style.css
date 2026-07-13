@@ -1,0 +1,334 @@
+/*
+  style.css — l'aspetto grafico del sito.
+  È diviso in sezioni: prima i colori di base, poi la barra laterale,
+  le schede della home, l'intestazione delle categorie e infine le linee guida.
+  In fondo ci sono le regole per quando lo schermo è piccolo (telefono).
+*/
+
+/* Colori e misure di base */
+:root {
+  --bg: #f5f7f6;            /* sfondo della pagina */
+  --surface: #ffffff;      /* sfondo delle schede */
+  --text: #1b2430;         /* colore del testo */
+  --text-soft: #5c6573;    /* testo secondario, più chiaro */
+  --primary: #2f6d59;      /* verde principale */
+  --primary-dark: #234f41;
+  --border: #e6e9ec;       /* colore dei bordi */
+  --rail-bg: #ecf2ed;      /* sfondo della barra laterale */
+  --rail-border: #dbe5dd;
+  --rail-text: #33433b;
+  --code-bg: #1c2230;      /* sfondo dei riquadri di codice */
+  --code-text: #e9eef7;
+  --tag-browsing: #2f6f4f;
+  --tag-scaffolding: #6a4fb0;
+  --radius: 14px;          /* quanto sono arrotondati gli angoli */
+  --shadow-sm: 0 1px 2px rgba(20,30,55,.06);
+  --shadow: 0 2px 6px rgba(20,30,55,.07), 0 14px 30px rgba(20,30,55,.06);
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Impostazioni generali */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; } /* scorrimento morbido; niente zoom testo su iOS */
+body { -webkit-tap-highlight-color: transparent; }
+body { margin: 0; font-family: var(--font); color: var(--text); background: var(--bg);
+  line-height: 1.6; font-size: 16px; -webkit-font-smoothing: antialiased; }
+a { color: var(--primary); }
+/* icone a linea generate da app.js: prendono il colore del contenitore */
+.ic { width: 1.4em; height: 1.4em; display: block; }
+h1, h2, h3 { line-height: 1.22; letter-spacing: -.01em; }
+img { max-width: 100%; }
+
+/* Accessibilità */
+/* link "salta al contenuto" nascosto, che appare solo quando ci si arriva da tastiera */
+.skip-link { position: absolute; left: -999px; top: 0; z-index: 100; background: var(--primary);
+  color: #fff; padding: .6rem 1rem; border-radius: 0 0 var(--radius) 0; }
+.skip-link:focus { left: 0; }
+/* contorno ben visibile su ciò che è selezionato con il tastierino */
+:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; border-radius: 4px; }
+/* dentro i contenitori che scorrono (barra, elenco, linee guida) il contorno va
+   disegnato "verso l'interno", altrimenti overflow lo taglia */
+.guideline > summary:focus-visible,
+.gl-item:focus-visible,
+.rail__nav a:focus-visible,
+.rail__list a:focus-visible { outline-offset: -2px; }
+
+/* Struttura: barra laterale + contenuto */
+.app-shell { display: flex; min-height: 100vh; } /* barra a sinistra, contenuto a destra */
+.rail { width: 264px; flex: none; background: var(--rail-bg); border-right: 1px solid var(--rail-border);
+  padding: 1.25rem 1rem; position: sticky; top: 0; height: 100vh; overflow-y: auto;
+  transition: margin-left .22s ease; } /* resta ferma mentre si scorre; si può chiudere */
+.rail__brand { display: flex; align-items: center; gap: .65rem; text-decoration: none;
+  color: var(--primary-dark); font-weight: 800; font-size: 1.02rem; line-height: 1.15;
+  margin-bottom: 1.4rem; padding-right: 2.2rem; }
+.rail__logo { display: inline-grid; place-items: center; width: 38px; height: 38px; flex: none;
+  border-radius: 10px; background: var(--primary); color: #fff; font-weight: 800; font-size: .92rem; }
+.rail__nav { display: flex; flex-direction: column; gap: .15rem; margin-bottom: 1.5rem; }
+.rail__nav a { display: flex; align-items: center; gap: .7rem; padding: .6rem .7rem; border-radius: 10px;
+  color: var(--rail-text); text-decoration: none; font-size: .95rem; font-weight: 500; }
+.rail__nav a svg { flex: none; opacity: .8; }
+.rail__nav a:hover { background: rgba(255,255,255,.7); }
+/* la voce della pagina in cui ci si trova viene evidenziata */
+.rail__nav a[aria-current="page"] { background: #fff; color: var(--primary-dark); font-weight: 700;
+  box-shadow: var(--shadow-sm); }
+.rail__list { border-top: 1px solid var(--rail-border); padding-top: 1rem; } /* elenco categorie/componenti */
+.rail__list h3 { font-size: .7rem; text-transform: uppercase; letter-spacing: .09em;
+  color: var(--text-soft); margin: 0 0 .55rem .2rem; }
+.rail__list ul { list-style: none; margin: 0; padding: 0; }
+.rail__list a { display: block; padding: .42rem .6rem; border-radius: 8px; color: var(--rail-text);
+  text-decoration: none; font-size: .9rem; line-height: 1.35; }
+.rail__list a:hover { background: rgba(255,255,255,.7); }
+.rail__list a[aria-current="page"] { background: #fff; color: var(--primary-dark); font-weight: 600; box-shadow: var(--shadow-sm); }
+
+/* Menu laterale a scomparsa */
+/* pulsante di chiusura dentro la barra (in alto a destra) */
+.rail-close { position: absolute; top: .6rem; right: .6rem; display: inline-grid; place-items: center;
+  width: 34px; height: 34px; border: 1px solid var(--rail-border); background: #fff; color: var(--rail-text);
+  border-radius: 9px; cursor: pointer; z-index: 2; }
+.rail-close:hover { background: var(--bg); }
+/* pulsante hamburger fisso, mostrato solo quando la barra è chiusa */
+.rail-toggle { display: none; position: fixed; z-index: 60;
+  top: calc(.7rem + env(safe-area-inset-top)); left: calc(.7rem + env(safe-area-inset-left));
+  width: 40px; height: 40px; place-items: center; border: 1px solid var(--border); background: #fff;
+  color: var(--primary-dark); border-radius: 10px; cursor: pointer; box-shadow: var(--shadow-sm); }
+.rail-toggle:hover { background: var(--bg); }
+/* quando è chiusa: la barra scorre fuori e compare l'hamburger */
+.app-shell.nav-collapsed .rail { margin-left: -280px; }
+/* l'hamburger si mostra/nasconde via classe (gestita dal JS), così può stare
+   all'inizio del documento ed essere raggiungibile subito da tastiera */
+.rail-toggle.is-visible { display: grid; }
+/* sfondo scuro (usato su mobile quando la barra è aperta) */
+.rail-backdrop { display: none; position: fixed; inset: 0; background: rgba(15,20,25,.45); z-index: 40; }
+
+.content { flex: 1; min-width: 0; }
+.content main { max-width: 1000px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+.breadcrumb { color: var(--text-soft); font-size: .88rem; margin: 0 0 1.25rem; } /* la scia "Home > ..." */
+.breadcrumb a { color: var(--text-soft); }
+
+/* Home */
+.hero { margin-bottom: 1.75rem; } /* il titolo grande in cima alla home */
+.hero h1 { margin: 0 0 .6rem; font-size: 2.25rem; line-height: 1.1; color: var(--text); }
+.hero p { color: var(--text-soft); max-width: 60ch; font-size: 1.08rem; margin: 0; }
+/* riga di statistiche sotto l'introduzione */
+.hero__stats { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.1rem; }
+.hero__stats span { background: var(--surface); border: 1px solid var(--border); border-radius: 999px;
+  padding: .35rem .85rem; font-size: .85rem; color: var(--text-soft); }
+.hero__stats b { color: var(--primary-dark); font-weight: 700; margin-right: .15rem; }
+
+.section-title-row { margin: 2.25rem 0 1rem; }
+.section-title-row h2 { margin: 0; font-size: 1.25rem; }
+
+/* le schede si dispongono in griglia e vanno a capo da sole in base allo spazio */
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.1rem; }
+.card { --accent: var(--primary); position: relative; display: flex; gap: .9rem; align-items: flex-start;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 1.2rem 1.25rem; text-decoration: none; color: inherit; box-shadow: var(--shadow-sm);
+  transition: transform .14s ease, box-shadow .14s ease, border-color .14s ease; overflow: hidden; }
+/* la barretta colorata a sinistra che spunta quando passi il mouse sulla scheda */
+.card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  background: var(--accent); transform: scaleY(0); transform-origin: top; transition: transform .16s ease; }
+.card:hover { transform: translateY(-3px); box-shadow: var(--shadow); } /* la scheda si solleva un po' */
+.card:hover::before { transform: scaleY(1); }
+.card__icon { display: inline-grid; place-items: center; width: 40px; height: 40px; flex: none;
+  border-radius: 11px; font-size: 1.1rem; background: var(--soft, #eef2f0); color: var(--accent, var(--primary)); }
+.card__body h3 { margin: 0 0 .3rem; font-size: 1.04rem; color: var(--text); }
+.card__body p { margin: 0; color: var(--text-soft); font-size: .92rem; }
+
+/* Home: fasce colorate per categoria con anteprime */
+.cat-bands { display: flex; flex-direction: column; gap: 2.6rem; }
+.cat-band { --accent: var(--primary); }
+/* la fascia colorata in cima a ogni categoria (cliccabile) */
+.cat-band__head { display: flex; gap: 1rem; align-items: flex-start; text-decoration: none; color: inherit;
+  padding: 1.1rem 1.3rem; border-radius: var(--radius); background: var(--soft, #eef2f0);
+  border-left: 6px solid var(--accent); transition: transform .12s ease, box-shadow .12s ease; }
+.cat-band__head:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.cat-band__icon { display: inline-grid; place-items: center; width: 46px; height: 46px; flex: none;
+  border-radius: 12px; background: #fff; font-size: 1.35rem; box-shadow: var(--shadow-sm); color: var(--accent, var(--primary)); }
+.cat-band__head h3 { margin: 0 0 .3rem; font-size: 1.18rem; color: var(--text); }
+.cat-band__head p { margin: 0; color: var(--text-soft); font-size: .92rem; max-width: 80ch; }
+/* il conteggio delle linee guida, a destra nella fascia */
+.cat-band__count { flex: none; align-self: flex-start; margin-left: auto; margin-top: .1rem; white-space: nowrap;
+  font-size: .78rem; font-weight: 600; color: var(--primary-dark); background: #fff;
+  border: 1px solid var(--border); border-radius: 999px; padding: .25rem .7rem; }
+/* le anteprime delle linee guida sotto la fascia */
+.cat-band__cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: .7rem; margin: .7rem 0 0 1rem; }
+.mini-card { display: flex; gap: .6rem; align-items: center; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 10px; padding: .6rem .8rem; text-decoration: none;
+  color: var(--text); box-shadow: var(--shadow-sm); transition: transform .12s ease, box-shadow .12s ease; }
+.mini-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.mini-card__icon { display: inline-grid; place-items: center; width: 28px; height: 28px; flex: none;
+  border-radius: 8px; font-size: .9rem; background: var(--soft, #eef2f0); color: var(--accent, var(--primary)); }
+.mini-card__text { font-size: .85rem; line-height: 1.3; }
+.mini-card__id { font-weight: 700; color: var(--primary-dark); margin-right: .35rem; }
+/* riquadro "vedi tutte": compare quando la categoria ha più anteprime di quelle mostrate,
+   così si capisce che c'è dell'altro e che si può cliccare per vederle */
+.mini-card--all { justify-content: space-between; background: var(--soft, #eef2f0);
+  border-style: dashed; border-color: var(--accent, var(--primary)); }
+.mini-card--all .mini-card__text { font-weight: 600; color: var(--primary-dark); }
+.mini-card--all .mini-card__go { flex: none; display: inline-grid; place-items: center;
+  color: var(--accent, var(--primary)); transition: transform .12s ease; }
+.mini-card--all .mini-card__go svg { width: 1.05rem; height: 1.05rem; }
+.mini-card--all:hover .mini-card__go { transform: translateX(3px); }
+
+/* Intestazione della categoria + titoli dei gruppi */
+/* il riquadro colorato in cima alla pagina di una categoria */
+.cat-header { --accent: var(--primary); display: flex; gap: 1.1rem; align-items: flex-start;
+  padding: 1.4rem 1.5rem; border-radius: var(--radius); background: var(--soft, #eef2f0);
+  border-left: 6px solid var(--accent); margin-bottom: 1.75rem; }
+.cat-header__icon { display: inline-grid; place-items: center; width: 52px; height: 52px; flex: none;
+  border-radius: 13px; background: #fff; font-size: 1.5rem; box-shadow: var(--shadow-sm); color: var(--accent, var(--primary)); }
+.cat-header h1 { margin: 0 0 .35rem; font-size: 1.6rem; color: var(--text); }
+.cat-header p { margin: 0; color: var(--text-soft); max-width: 75ch; }
+
+/* i titoletti "Browsing guidelines" / "Scaffolding guidelines" con la lineetta a fianco */
+.group-title { font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; color: var(--text-soft);
+  margin: 2rem 0 .85rem; display: flex; align-items: center; gap: .5rem; }
+.group-title::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+
+/* Le linee guida (lista e dettaglio) */
+.guideline-list { display: flex; flex-direction: column; gap: .7rem; }
+.guideline { background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  box-shadow: var(--shadow-sm); overflow: hidden; }
+/* la riga su cui si clicca per aprire/chiudere una linea guida */
+.guideline > summary { cursor: pointer; list-style: none; padding: 1rem 1.15rem; display: flex;
+  align-items: center; gap: .75rem; }
+.guideline > summary::-webkit-details-marker { display: none; } /* nasconde la freccetta di default */
+.guideline > summary:hover { background: #fafbfb; }
+.guideline[open] > summary { border-bottom: 1px solid var(--border); }
+.guideline__chevron { transition: transform .15s ease; color: var(--text-soft); margin-left: auto; font-size: .7rem; }
+.guideline[open] .guideline__chevron { transform: rotate(90deg); } /* la freccetta ruota quando è aperta */
+.guideline__row { display: flex; align-items: center; gap: .75rem; padding: 1rem 1.15rem; }
+.guideline__id { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--primary-dark);
+  background: #e7f0ec; border-radius: 6px; padding: .12rem .5rem; font-size: .78rem; }
+.guideline__title { font-weight: 600; flex: 1; }
+/* aspetto "discreto" delle linee guida ancora da completare */
+.guideline--quiet { box-shadow: none; background: #fbfcfb; border-style: dashed; }
+.guideline--quiet .guideline__title { color: var(--text-soft); font-weight: 500; }
+.guideline--quiet .guideline__id { background: #eef1ef; color: var(--text-soft); }
+
+/* le etichette colorate Browsing / Scaffolding */
+.tag { font-size: .68rem; text-transform: uppercase; letter-spacing: .05em; padding: .15rem .55rem;
+  border-radius: 999px; font-weight: 700; white-space: nowrap; }
+.tag--browsing { background: #e4f1ea; color: var(--tag-browsing); }
+.tag--scaffolding { background: #ece6f7; color: var(--tag-scaffolding); }
+
+/* il contenuto che appare quando apri una linea guida */
+.guideline__body { padding: 1.1rem 1.2rem 1.3rem; }
+.guideline__body h4 { margin: 1.15rem 0 .45rem; font-size: .8rem; color: var(--primary-dark);
+  text-transform: uppercase; letter-spacing: .05em; }
+.guideline__body h4:first-child { margin-top: 0; }
+.guideline__body ul { margin: .25rem 0; padding-left: 1.2rem; }
+.guideline__body li { margin: .25rem 0; }
+.example { margin: .65rem 0; }
+.example__label { font-size: .85rem; color: var(--text-soft); margin: 0 0 .35rem; }
+/* riquadro scuro per gli esempi di codice */
+pre.code { background: var(--code-bg); color: var(--code-text); padding: 1rem 1.1rem; border-radius: 9px;
+  overflow-x: auto; font-size: .85rem; line-height: 1.55; margin: 0; max-width: 100%; }
+pre.code code { font-family: "SF Mono", Menlo, Consolas, monospace; }
+/* riquadro chiaro per gli esempi di dialogo/interazione */
+.example--interaction p { background: #eef3f1; border-left: 3px solid var(--primary); padding: .75rem .95rem;
+  border-radius: 0 9px 9px 0; margin: 0; }
+/* i collegamenti ad altre linee guida, come card colorate (colore della loro categoria) */
+.related { margin-top: 1.3rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+.related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: .7rem; margin-top: .6rem; }
+.related-card { --accent: var(--primary); display: flex; gap: .65rem; align-items: flex-start;
+  background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--accent);
+  border-radius: 10px; padding: .65rem .8rem; text-decoration: none; color: var(--text);
+  box-shadow: var(--shadow-sm); transition: transform .12s ease, box-shadow .12s ease; }
+.related-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.related-card__icon { display: inline-grid; place-items: center; width: 30px; height: 30px; flex: none;
+  border-radius: 8px; font-size: .95rem; background: var(--soft, #eef2f0); color: var(--accent, var(--primary)); }
+.related-card__text { font-size: .86rem; line-height: 1.3; }
+.related-card__id { font-weight: 700; color: var(--primary-dark); margin-right: .35rem; }
+
+/* Pagina di dettaglio: lista a sinistra + pannello a destra */
+.detail-layout { display: grid; grid-template-columns: 340px 1fr; gap: 1.5rem; align-items: start; }
+/* min-width:0 = le colonne possono restringersi sotto la larghezza del contenuto
+   (evita che un esempio di codice lungo allarghi tutta la pagina su telefono) */
+.detail-list, .detail-pane { min-width: 0; }
+/* l'elenco a sinistra resta visibile mentre si scorre il pannello */
+.detail-list { position: sticky; top: 1rem; max-height: calc(100vh - 2rem); overflow-y: auto; padding: 4px 6px; }
+.detail-list .group-title:first-child { margin-top: 0; }
+/* casella di ricerca sopra l'elenco */
+.gl-search { width: 100%; font: inherit; font-size: .9rem; padding: .55rem .8rem; margin-bottom: .8rem;
+  border: 1px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--text);
+  box-shadow: var(--shadow-sm); }
+.gl-search::placeholder { color: var(--text-soft); }
+.gl-noresults { color: var(--text-soft); font-size: .88rem; padding: .4rem .2rem; }
+.gl-list { display: flex; flex-direction: column; gap: .4rem; }
+/* una voce dell'elenco (linea guida selezionabile) */
+.gl-item { display: flex; align-items: center; gap: .6rem; padding: .6rem .75rem; border-radius: 10px;
+  border: 1px solid var(--border); background: var(--surface); text-decoration: none; color: var(--text);
+  box-shadow: var(--shadow-sm); transition: background .12s ease, border-color .12s ease; }
+.gl-item:hover { background: #fafbfb; }
+.gl-item__title { font-size: .85rem; line-height: 1.3; font-weight: 500; }
+/* la voce attualmente mostrata nel pannello */
+.gl-item--active { border-color: var(--primary); background: #f1f7f4; box-shadow: 0 0 0 2px rgba(47,109,89,.15); }
+.gl-item--active .gl-item__title { font-weight: 600; color: var(--primary-dark); }
+/* voci ancora "in arrivo": aspetto più discreto */
+.gl-item--quiet { border-style: dashed; background: #fbfcfb; }
+.gl-item--quiet .gl-item__title { color: var(--text-soft); font-weight: 500; }
+.gl-item--quiet .guideline__id { background: #eef1ef; color: var(--text-soft); }
+
+/* il pannello di destra con il contenuto della linea guida selezionata */
+.detail-pane { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  box-shadow: var(--shadow-sm); padding: 1.5rem 1.6rem 1.7rem; min-height: 320px; }
+.detail-pane__head { display: flex; align-items: center; gap: .65rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.detail-pane__title { margin: 0; font-size: 1.35rem; flex: 1 1 60%; color: var(--text); }
+.detail-pane__pending { color: var(--text-soft); font-style: italic; }
+.detail-pane__body { max-width: 78ch; overflow-wrap: anywhere; }
+.detail-pane__body > p { color: var(--text); }
+.detail-pane__body h4 { margin: 1.3rem 0 .45rem; font-size: .8rem; color: var(--primary-dark);
+  text-transform: uppercase; letter-spacing: .05em; }
+.detail-pane__body > h4:first-child { margin-top: .4rem; }
+.detail-pane__body ul { margin: .25rem 0; padding-left: 1.2rem; }
+.detail-pane__body li { margin: .25rem 0; }
+/* esempio di codice con pulsante "Copia" in alto a destra */
+.code-wrap { position: relative; }
+.code-copy { position: absolute; top: .55rem; right: .55rem; z-index: 1; font: inherit; font-size: .72rem;
+  font-weight: 600; cursor: pointer; color: #cfe0d8; background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.18); border-radius: 7px; padding: .2rem .55rem; transition: background .12s ease; }
+.code-copy:hover { background: rgba(255,255,255,.2); color: #fff; }
+.code-copy.copied { background: #2f9e6a; border-color: #2f9e6a; color: #fff; }
+/* riquadro chiaro per la sezione "Cosa controllare", come nel mockup */
+.whatToDo { background: #eef3f1; border-radius: 11px; padding: .7rem 1rem .9rem; margin: 1rem 0; }
+.whatToDo h4 { margin-top: .3rem !important; }
+
+/* Schermi piccoli (telefono/tablet) */
+/* sotto gli 820px la barra laterale va in alto e tutto si impila in colonna */
+@media (max-width: 820px) {
+  .app-shell { flex-direction: column; }
+  /* la barra diventa un pannello che entra da sinistra sopra il contenuto */
+  .rail { position: fixed; top: 0; left: 0; width: 82vw; max-width: 300px; height: 100vh; z-index: 50; margin-left: 0;
+    padding-top: calc(1.25rem + env(safe-area-inset-top));
+    border-right: 1px solid var(--rail-border); border-bottom: 0; overflow-y: auto;
+    transform: translateX(0); transition: transform .22s ease; box-shadow: 0 0 30px rgba(0,0,0,.18); }
+  .app-shell.nav-collapsed .rail { transform: translateX(-100%); margin-left: 0; }
+  .rail__brand { margin-bottom: 1rem; }
+  .rail__nav { flex-direction: column; margin-bottom: 1rem; }
+  .rail__list { display: block; }
+  /* lo sfondo scuro appare quando la barra è aperta */
+  .app-shell:not(.nav-collapsed) ~ .rail-backdrop { display: block; }
+  /* spazio in alto per il pulsante hamburger e per il notch; margini laterali sicuri */
+  .content main { padding-top: calc(3.4rem + env(safe-area-inset-top)); padding-bottom: 3rem;
+    padding-left: max(1.25rem, env(safe-area-inset-left)); padding-right: max(1.25rem, env(safe-area-inset-right)); }
+  .hero h1 { font-size: 1.85rem; }
+  .cat-header { flex-direction: column; }
+  /* lista e pannello si impilano, e la lista non resta più "appiccicata" */
+  .detail-layout { grid-template-columns: 1fr; }
+  .detail-list { position: static; max-height: none; }
+  .cat-band__cards { margin-left: 0; }
+}
+
+/* iPhone e schermi molto stretti */
+@media (max-width: 430px) {
+  .hero h1 { font-size: 1.6rem; }
+  .hero p { font-size: 1rem; }
+  .detail-pane { padding: 1.1rem 1.05rem 1.3rem; }
+  .cat-band__head { padding: 1rem 1.05rem; gap: .8rem; }
+  .cat-band__cards { grid-template-columns: 1fr; }
+  .card-grid { grid-template-columns: 1fr; }
+  .cat-band__count { display: none; } /* niente conteggio: evita di affollare l'intestazione */
+  pre.code { font-size: .8rem; }
+}

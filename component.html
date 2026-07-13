@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<!-- Pagina che mostra le linee guida legate a un componente web. -->
+<!-- Il componente arriva dall'indirizzo, es. component.html?id=comp-input -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#2f6d59">
+  <title>Design patterns - Conversational Web</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="component">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="app-shell">
+    <!-- Barra laterale (uguale alle altre pagine) -->
+    <aside class="rail">
+      <a class="rail__brand" href="index.html">
+        <span class="rail__logo">CW</span>
+        <span>Conversational Web<br>Browsing Wikia</span>
+      </a>
+      <nav class="rail__nav" aria-label="Main navigation">
+        <a href="index.html">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/></svg>
+          Home
+        </a>
+        <a href="category.html">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2z"/><path d="M9 8h6M9 12h6"/></svg>
+          Guidelines
+        </a>
+        <a href="component.html" aria-current="page">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+          Design patterns
+        </a>
+      </nav>
+      <!-- Elenco dei componenti: lo riempie app.js -->
+      <div class="rail__list" id="rail-list"></div>
+    </aside>
+
+    <div class="content">
+      <main id="main">
+        <p class="breadcrumb"><a href="index.html">Home</a> &rsaquo; Design patterns</p>
+        <!-- Qui dentro app.js inserisce l'intestazione del componente e le sue linee guida -->
+        <div id="main-view"></div>
+      </main>
+    </div>
+  </div>
+
+  <script src="data/content.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
