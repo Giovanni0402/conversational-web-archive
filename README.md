@@ -5,9 +5,6 @@ Progetto di Ingegneria Informatica, Politecnico di Milano. Tutor: Ludovica Piro.
 
 Sito online: https://giovanni0402.github.io/conversational-web-archive/
 
-
-Editor: https://giovanni0402.github.io/conversational-web-archive/editor.html
-
 ## Aprirlo
 
 Doppio click su `index.html`. Non serve un server: i contenuti stanno in `data/content.js`,
@@ -63,6 +60,12 @@ Source "Deploy from a branch", branch `main`, cartella `/ (root)`. Sito statico,
   navigazione da tastiera).
 - Responsive, ottimizzato anche per mobile/iPhone.
 - Contenuti separati dal codice, modificabili senza toccare l'HTML.
-- Apribile con doppio click in locale
+- Apribile con doppio click e pubblicabile su GitHub Pages.
 
+## Punti aperti (da chiarire con la tutor)
 
+- Validazione del mapping linea guida / design pattern (alcune associazioni sotto
+  "Data protection" sono da confermare).
+- Testo delle linee guida ancora "in arrivo": non è ancora disponibile (in
+  `Web Design guidelines.md` ci sono solo le 12 complete).
+- Il brief cita 10 categorie ma ne elenca 9.

@@ -5,7 +5,7 @@
   In fondo ci sono le regole per quando lo schermo è piccolo (telefono).
 */
 
-/* Colori e misure di base */
+/* Colori e misure di base (così cambiarli qui li cambia ovunque) */
 :root {
   --bg: #f5f7f6;            /* sfondo della pagina */
   --surface: #ffffff;      /* sfondo delle schede */
@@ -331,4 +331,32 @@ pre.code code { font-family: "SF Mono", Menlo, Consolas, monospace; }
   .card-grid { grid-template-columns: 1fr; }
   .cat-band__count { display: none; } /* niente conteggio: evita di affollare l'intestazione */
   pre.code { font-size: .8rem; }
+}
+
+/* Footer del sito, in fondo al contenuto di ogni pagina */
+.site-footer { border-top: 1px solid var(--border); background: var(--rail-bg); margin-top: 2.5rem; }
+.site-footer__top { max-width: 1000px; margin: 0 auto; padding: 2rem 2rem 1.4rem;
+  display: grid; grid-template-columns: 1.5fr 1fr 1.4fr; gap: 2rem; align-items: start; }
+.site-footer__brand { display: block; font-weight: 800; color: var(--primary-dark); font-size: 1rem; }
+.site-footer__tagline { margin: .45rem 0 0; color: var(--text-soft); font-size: .85rem; max-width: 34ch; line-height: 1.5; }
+.site-footer__links { display: flex; flex-direction: column; gap: .35rem; }
+.site-footer__links a { color: var(--rail-text); text-decoration: none; font-size: .9rem; }
+.site-footer__links a:hover { color: var(--primary-dark); text-decoration: underline; }
+.site-footer__org { text-align: right; }
+.site-footer__logo { height: 24px; width: auto; }
+.site-footer__org p { margin: .55rem 0 0; color: var(--text-soft); font-size: .8rem; line-height: 1.45; }
+.site-footer__bottom { max-width: 1000px; margin: 0 auto; padding: .9rem 2rem;
+  border-top: 1px solid var(--border); display: flex; justify-content: space-between; gap: 1rem;
+  flex-wrap: wrap; color: var(--text-soft); font-size: .78rem; }
+
+/* Pagina About */
+.about { display: grid; gap: 1.2rem; margin-top: 1rem; }
+.about-block { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 1.4rem 1.5rem; box-shadow: var(--shadow-sm); }
+.about-block h2 { margin: 0 0 .55rem; font-size: 1.15rem; color: var(--primary-dark); }
+.about-block p { margin: 0; color: var(--text); line-height: 1.65; }
+
+@media (max-width: 720px) {
+  .site-footer__top { grid-template-columns: 1fr; gap: 1.4rem; }
+  .site-footer__org { text-align: left; }
 }

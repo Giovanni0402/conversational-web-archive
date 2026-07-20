@@ -1,0 +1,11 @@
+# Materiali del corso / della tutor: non pubblicare online
+progetto-triennale-sitoweb/
+
+# Deliverable (non fanno parte del sito pubblico)
+Report_Conversational_Web.docx
+Report_Conversational_Web_v2.docx
+*.pptx
+
+# Sistema
+Thumbs.db
+.DS_Store
