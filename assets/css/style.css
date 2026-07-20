@@ -333,8 +333,11 @@ pre.code code { font-family: "SF Mono", Menlo, Consolas, monospace; }
   pre.code { font-size: .8rem; }
 }
 
-/* Footer del sito, in fondo al contenuto di ogni pagina */
-.site-footer { border-top: 1px solid var(--border); background: var(--rail-bg); margin-top: 2.5rem; }
+/* Footer del sito, in fondo a ogni pagina */
+/* la colonna del contenuto è flex, così il footer resta in fondo anche quando il testo è poco */
+.content { display: flex; flex-direction: column; }
+.content main { flex: 1 0 auto; }
+.site-footer { margin-top: auto; border-top: 1px solid var(--border); background: var(--rail-bg); }
 .site-footer__top { max-width: 1000px; margin: 0 auto; padding: 2rem 2rem 1.4rem;
   display: grid; grid-template-columns: 1.5fr 1fr 1.4fr; gap: 2rem; align-items: start; }
 .site-footer__brand { display: block; font-weight: 800; color: var(--primary-dark); font-size: 1rem; }
@@ -345,6 +348,7 @@ pre.code code { font-family: "SF Mono", Menlo, Consolas, monospace; }
 .site-footer__org { text-align: right; }
 .site-footer__logo { height: 24px; width: auto; }
 .site-footer__org p { margin: .55rem 0 0; color: var(--text-soft); font-size: .8rem; line-height: 1.45; }
+.site-footer__org a { color: var(--text-soft); }
 .site-footer__bottom { max-width: 1000px; margin: 0 auto; padding: .9rem 2rem;
   border-top: 1px solid var(--border); display: flex; justify-content: space-between; gap: 1rem;
   flex-wrap: wrap; color: var(--text-soft); font-size: .78rem; }
