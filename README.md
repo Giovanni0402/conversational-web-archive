@@ -53,19 +53,3 @@ conversational-web-archive/
 
 Carica il contenuto della cartella nella root del repository, poi Settings > Pages,
 Source "Deploy from a branch", branch `main`, cartella `/ (root)`. Sito statico, nessun build.
-
-## Requisiti coperti
-
-- HTML5 semantico, accessibilità di base (skip link, landmark, `aria-*`, focus visibile,
-  navigazione da tastiera).
-- Responsive, ottimizzato anche per mobile/iPhone.
-- Contenuti separati dal codice, modificabili senza toccare l'HTML.
-- Apribile con doppio click e pubblicabile su GitHub Pages.
-
-## Punti aperti (da chiarire con la tutor)
-
-- Validazione del mapping linea guida / design pattern (alcune associazioni sotto
-  "Data protection" sono da confermare).
-- Testo delle linee guida ancora "in arrivo": non è ancora disponibile (in
-  `Web Design guidelines.md` ci sono solo le 12 complete).
-- Il brief cita 10 categorie ma ne elenca 9.
