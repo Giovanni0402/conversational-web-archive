@@ -24,6 +24,17 @@ In alternativa si può modificare `data/content.js` a mano. Ogni linea guida ha:
 `whatToDo` (lista), `examples`, `related` (lista di id), `status` (`complete`/`pending`).
 Con `status: "complete"` il contenuto viene mostrato.
 
+## Modificare le pagine About e Contacts
+
+`about.html` e `contacts.html` sono pagine statiche: il testo non passa dall'editor, si
+modifica direttamente nel file. Aprilo con un editor di testo e cambia quello che c'è dentro
+i tag: `<h1>` e il `<p>` sotto per l'introduzione, `<h2>` e `<p>` dentro ogni
+`<article class="about-block">` per le singole sezioni. Per aggiungere una sezione basta
+copiare un blocco `<article class="about-block">` e cambiarne il testo.
+
+Il footer sta in fondo a ogni pagina (`<footer class="site-footer">`): per cambiarne i testi
+va modificato in tutte le pagine (`index`, `category`, `component`, `about`, `contacts`).
+
 ## Struttura
 
 ```
@@ -31,9 +42,12 @@ conversational-web-archive/
 ├── index.html          homepage
 ├── category.html       consultazione per categoria
 ├── component.html      consultazione per design pattern
+├── about.html          pagina About (testo statico)
+├── contacts.html       pagina Contacts (testo statico)
 ├── editor.html         editor dei contenuti
 ├── assets/
 │   ├── css/style.css   stile
+│   ├── img/            logo Politecnico usato nel footer
 │   └── js/app.js       caricamento dati e rendering
 ├── data/
 │   └── content.js      tutti i contenuti (gestiti dall'editor)

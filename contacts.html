@@ -1,19 +1,17 @@
 <!DOCTYPE html>
-<!-- Pagina che mostra le linee guida di una categoria. -->
-<!-- La categoria da mostrare arriva dall'indirizzo, es. category.html?id=cat-error -->
+<!-- Pagina "Contacts": contatti del progetto. Testi segnaposto, da completare. -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#2f6d59">
-  <title>Guidelines - Conversational Web</title>
+  <title>Contacts - Conversational Web</title>
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body data-page="category">
+<body data-page="contacts">
   <a class="skip-link" href="#main">Skip to content</a>
 
   <div class="app-shell">
-    <!-- Barra laterale (uguale alle altre pagine) -->
     <aside class="rail">
       <a class="rail__brand" href="index.html">
         <span class="rail__logo">CW</span>
@@ -24,7 +22,7 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/></svg>
           Home
         </a>
-        <a href="category.html" aria-current="page">
+        <a href="category.html">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2z"/><path d="M9 8h6M9 12h6"/></svg>
           Guidelines
         </a>
@@ -36,20 +34,31 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
           About
         </a>
-        <a href="contacts.html">
+        <a href="contacts.html" aria-current="page">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
           Contacts
         </a>
       </nav>
-      <!-- Elenco delle categorie: lo riempie app.js -->
-      <div class="rail__list" id="rail-list"></div>
     </aside>
 
     <div class="content">
       <main id="main">
-        <p class="breadcrumb"><a href="index.html">Home</a> &rsaquo; Guidelines</p>
-        <!-- Qui dentro app.js inserisce l'intestazione della categoria e le linee guida -->
-        <div id="main-view"></div>
+        <section class="hero">
+          <h1>Contacts</h1>
+          <p>Placeholder — how to get in touch (text to be provided).</p>
+        </section>
+
+        <section class="about" aria-label="Contacts">
+          <article class="about-block">
+            <h2>Get in touch</h2>
+            <p>Placeholder contact information — email and references to be provided.</p>
+          </article>
+          <article class="about-block">
+            <h2>Research group</h2>
+            <p>Placeholder text about the HINT research group at Politecnico di Milano and how
+               to reach it.</p>
+          </article>
+        </section>
       </main>
 
       <footer class="site-footer">
